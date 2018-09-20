@@ -42,6 +42,8 @@ public class CommonResult<T> {
         this.data = data;
     }
 
+
+    
     public static CommonResult success(Status status) {
         return new CommonResult(status.getCode(),status.getMessage(),null);
     }
