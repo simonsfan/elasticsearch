@@ -1,0 +1,177 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.elasticsearch.cn.elasticsearch.dao.HouseDetailMapper" >
+  <resultMap id="BaseResultMap" type="com.elasticsearch.cn.elasticsearch.bean.HouseDetail" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="description" property="description" jdbcType="VARCHAR" />
+    <result column="layout_desc" property="layoutDesc" jdbcType="VARCHAR" />
+    <result column="traffic" property="traffic" jdbcType="VARCHAR" />
+    <result column="round_service" property="roundService" jdbcType="VARCHAR" />
+    <result column="rent_way" property="rentWay" jdbcType="INTEGER" />
+    <result column="address" property="address" jdbcType="VARCHAR" />
+    <result column="subway_line_id" property="subwayLineId" jdbcType="INTEGER" />
+    <result column="subway_line_name" property="subwayLineName" jdbcType="VARCHAR" />
+    <result column="subway_station_id" property="subwayStationId" jdbcType="INTEGER" />
+    <result column="subway_station_name" property="subwayStationName" jdbcType="VARCHAR" />
+    <result column="house_id" property="houseId" jdbcType="INTEGER" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, description, layout_desc, traffic, round_service, rent_way, address, subway_line_id, 
+    subway_line_name, subway_station_id, subway_station_name, house_id
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from house_detail
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from house_detail
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.elasticsearch.cn.elasticsearch.bean.HouseDetail" >
+    insert into house_detail (id, description, layout_desc, 
+      traffic, round_service, rent_way, 
+      address, subway_line_id, subway_line_name, 
+      subway_station_id, subway_station_name, house_id
+      )
+    values (#{id,jdbcType=INTEGER}, #{description,jdbcType=VARCHAR}, #{layoutDesc,jdbcType=VARCHAR}, 
+      #{traffic,jdbcType=VARCHAR}, #{roundService,jdbcType=VARCHAR}, #{rentWay,jdbcType=INTEGER}, 
+      #{address,jdbcType=VARCHAR}, #{subwayLineId,jdbcType=INTEGER}, #{subwayLineName,jdbcType=VARCHAR}, 
+      #{subwayStationId,jdbcType=INTEGER}, #{subwayStationName,jdbcType=VARCHAR}, #{houseId,jdbcType=INTEGER}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.elasticsearch.cn.elasticsearch.bean.HouseDetail" >
+    insert into house_detail
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="description != null" >
+        description,
+      </if>
+      <if test="layoutDesc != null" >
+        layout_desc,
+      </if>
+      <if test="traffic != null" >
+        traffic,
+      </if>
+      <if test="roundService != null" >
+        round_service,
+      </if>
+      <if test="rentWay != null" >
+        rent_way,
+      </if>
+      <if test="address != null" >
+        address,
+      </if>
+      <if test="subwayLineId != null" >
+        subway_line_id,
+      </if>
+      <if test="subwayLineName != null" >
+        subway_line_name,
+      </if>
+      <if test="subwayStationId != null" >
+        subway_station_id,
+      </if>
+      <if test="subwayStationName != null" >
+        subway_station_name,
+      </if>
+      <if test="houseId != null" >
+        house_id,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="description != null" >
+        #{description,jdbcType=VARCHAR},
+      </if>
+      <if test="layoutDesc != null" >
+        #{layoutDesc,jdbcType=VARCHAR},
+      </if>
+      <if test="traffic != null" >
+        #{traffic,jdbcType=VARCHAR},
+      </if>
+      <if test="roundService != null" >
+        #{roundService,jdbcType=VARCHAR},
+      </if>
+      <if test="rentWay != null" >
+        #{rentWay,jdbcType=INTEGER},
+      </if>
+      <if test="address != null" >
+        #{address,jdbcType=VARCHAR},
+      </if>
+      <if test="subwayLineId != null" >
+        #{subwayLineId,jdbcType=INTEGER},
+      </if>
+      <if test="subwayLineName != null" >
+        #{subwayLineName,jdbcType=VARCHAR},
+      </if>
+      <if test="subwayStationId != null" >
+        #{subwayStationId,jdbcType=INTEGER},
+      </if>
+      <if test="subwayStationName != null" >
+        #{subwayStationName,jdbcType=VARCHAR},
+      </if>
+      <if test="houseId != null" >
+        #{houseId,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.elasticsearch.cn.elasticsearch.bean.HouseDetail" >
+    update house_detail
+    <set >
+      <if test="description != null" >
+        description = #{description,jdbcType=VARCHAR},
+      </if>
+      <if test="layoutDesc != null" >
+        layout_desc = #{layoutDesc,jdbcType=VARCHAR},
+      </if>
+      <if test="traffic != null" >
+        traffic = #{traffic,jdbcType=VARCHAR},
+      </if>
+      <if test="roundService != null" >
+        round_service = #{roundService,jdbcType=VARCHAR},
+      </if>
+      <if test="rentWay != null" >
+        rent_way = #{rentWay,jdbcType=INTEGER},
+      </if>
+      <if test="address != null" >
+        address = #{address,jdbcType=VARCHAR},
+      </if>
+      <if test="subwayLineId != null" >
+        subway_line_id = #{subwayLineId,jdbcType=INTEGER},
+      </if>
+      <if test="subwayLineName != null" >
+        subway_line_name = #{subwayLineName,jdbcType=VARCHAR},
+      </if>
+      <if test="subwayStationId != null" >
+        subway_station_id = #{subwayStationId,jdbcType=INTEGER},
+      </if>
+      <if test="subwayStationName != null" >
+        subway_station_name = #{subwayStationName,jdbcType=VARCHAR},
+      </if>
+      <if test="houseId != null" >
+        house_id = #{houseId,jdbcType=INTEGER},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.elasticsearch.cn.elasticsearch.bean.HouseDetail" >
+    update house_detail
+    set description = #{description,jdbcType=VARCHAR},
+      layout_desc = #{layoutDesc,jdbcType=VARCHAR},
+      traffic = #{traffic,jdbcType=VARCHAR},
+      round_service = #{roundService,jdbcType=VARCHAR},
+      rent_way = #{rentWay,jdbcType=INTEGER},
+      address = #{address,jdbcType=VARCHAR},
+      subway_line_id = #{subwayLineId,jdbcType=INTEGER},
+      subway_line_name = #{subwayLineName,jdbcType=VARCHAR},
+      subway_station_id = #{subwayStationId,jdbcType=INTEGER},
+      subway_station_name = #{subwayStationName,jdbcType=VARCHAR},
+      house_id = #{houseId,jdbcType=INTEGER}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

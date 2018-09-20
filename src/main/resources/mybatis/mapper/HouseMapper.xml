@@ -1,0 +1,294 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.elasticsearch.cn.elasticsearch.dao.HouseMapper" >
+  <resultMap id="BaseResultMap" type="com.elasticsearch.cn.elasticsearch.bean.House" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="title" property="title" jdbcType="VARCHAR" />
+    <result column="price" property="price" jdbcType="INTEGER" />
+    <result column="area" property="area" jdbcType="INTEGER" />
+    <result column="room" property="room" jdbcType="INTEGER" />
+    <result column="floor" property="floor" jdbcType="INTEGER" />
+    <result column="total_floor" property="totalFloor" jdbcType="INTEGER" />
+    <result column="watch_times" property="watchTimes" jdbcType="INTEGER" />
+    <result column="build_year" property="buildYear" jdbcType="INTEGER" />
+    <result column="status" property="status" jdbcType="INTEGER" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="last_update_time" property="lastUpdateTime" jdbcType="TIMESTAMP" />
+    <result column="city_en_name" property="cityEnName" jdbcType="VARCHAR" />
+    <result column="region_en_name" property="regionEnName" jdbcType="VARCHAR" />
+    <result column="cover" property="cover" jdbcType="VARCHAR" />
+    <result column="direction" property="direction" jdbcType="INTEGER" />
+    <result column="distance_to_subway" property="distanceToSubway" jdbcType="INTEGER" />
+    <result column="parlour" property="parlour" jdbcType="INTEGER" />
+    <result column="district" property="district" jdbcType="VARCHAR" />
+    <result column="admin_id" property="adminId" jdbcType="INTEGER" />
+    <result column="bathroom" property="bathroom" jdbcType="INTEGER" />
+    <result column="street" property="street" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, title, price, area, room, floor, total_floor, watch_times, build_year, status, 
+    create_time, last_update_time, city_en_name, region_en_name, cover, direction, distance_to_subway, 
+    parlour, district, admin_id, bathroom, street
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from house
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from house
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.elasticsearch.cn.elasticsearch.bean.House" >
+    insert into house (id, title, price, 
+      area, room, floor, 
+      total_floor, watch_times, build_year, 
+      status, create_time, last_update_time, 
+      city_en_name, region_en_name, cover, 
+      direction, distance_to_subway, parlour, 
+      district, admin_id, bathroom, 
+      street)
+    values (#{id,jdbcType=INTEGER}, #{title,jdbcType=VARCHAR}, #{price,jdbcType=INTEGER}, 
+      #{area,jdbcType=INTEGER}, #{room,jdbcType=INTEGER}, #{floor,jdbcType=INTEGER}, 
+      #{totalFloor,jdbcType=INTEGER}, #{watchTimes,jdbcType=INTEGER}, #{buildYear,jdbcType=INTEGER}, 
+      #{status,jdbcType=INTEGER}, #{createTime,jdbcType=TIMESTAMP}, #{lastUpdateTime,jdbcType=TIMESTAMP}, 
+      #{cityEnName,jdbcType=VARCHAR}, #{regionEnName,jdbcType=VARCHAR}, #{cover,jdbcType=VARCHAR}, 
+      #{direction,jdbcType=INTEGER}, #{distanceToSubway,jdbcType=INTEGER}, #{parlour,jdbcType=INTEGER}, 
+      #{district,jdbcType=VARCHAR}, #{adminId,jdbcType=INTEGER}, #{bathroom,jdbcType=INTEGER}, 
+      #{street,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.elasticsearch.cn.elasticsearch.bean.House" >
+    insert into house
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="title != null" >
+        title,
+      </if>
+      <if test="price != null" >
+        price,
+      </if>
+      <if test="area != null" >
+        area,
+      </if>
+      <if test="room != null" >
+        room,
+      </if>
+      <if test="floor != null" >
+        floor,
+      </if>
+      <if test="totalFloor != null" >
+        total_floor,
+      </if>
+      <if test="watchTimes != null" >
+        watch_times,
+      </if>
+      <if test="buildYear != null" >
+        build_year,
+      </if>
+      <if test="status != null" >
+        status,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="lastUpdateTime != null" >
+        last_update_time,
+      </if>
+      <if test="cityEnName != null" >
+        city_en_name,
+      </if>
+      <if test="regionEnName != null" >
+        region_en_name,
+      </if>
+      <if test="cover != null" >
+        cover,
+      </if>
+      <if test="direction != null" >
+        direction,
+      </if>
+      <if test="distanceToSubway != null" >
+        distance_to_subway,
+      </if>
+      <if test="parlour != null" >
+        parlour,
+      </if>
+      <if test="district != null" >
+        district,
+      </if>
+      <if test="adminId != null" >
+        admin_id,
+      </if>
+      <if test="bathroom != null" >
+        bathroom,
+      </if>
+      <if test="street != null" >
+        street,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="title != null" >
+        #{title,jdbcType=VARCHAR},
+      </if>
+      <if test="price != null" >
+        #{price,jdbcType=INTEGER},
+      </if>
+      <if test="area != null" >
+        #{area,jdbcType=INTEGER},
+      </if>
+      <if test="room != null" >
+        #{room,jdbcType=INTEGER},
+      </if>
+      <if test="floor != null" >
+        #{floor,jdbcType=INTEGER},
+      </if>
+      <if test="totalFloor != null" >
+        #{totalFloor,jdbcType=INTEGER},
+      </if>
+      <if test="watchTimes != null" >
+        #{watchTimes,jdbcType=INTEGER},
+      </if>
+      <if test="buildYear != null" >
+        #{buildYear,jdbcType=INTEGER},
+      </if>
+      <if test="status != null" >
+        #{status,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="lastUpdateTime != null" >
+        #{lastUpdateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="cityEnName != null" >
+        #{cityEnName,jdbcType=VARCHAR},
+      </if>
+      <if test="regionEnName != null" >
+        #{regionEnName,jdbcType=VARCHAR},
+      </if>
+      <if test="cover != null" >
+        #{cover,jdbcType=VARCHAR},
+      </if>
+      <if test="direction != null" >
+        #{direction,jdbcType=INTEGER},
+      </if>
+      <if test="distanceToSubway != null" >
+        #{distanceToSubway,jdbcType=INTEGER},
+      </if>
+      <if test="parlour != null" >
+        #{parlour,jdbcType=INTEGER},
+      </if>
+      <if test="district != null" >
+        #{district,jdbcType=VARCHAR},
+      </if>
+      <if test="adminId != null" >
+        #{adminId,jdbcType=INTEGER},
+      </if>
+      <if test="bathroom != null" >
+        #{bathroom,jdbcType=INTEGER},
+      </if>
+      <if test="street != null" >
+        #{street,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.elasticsearch.cn.elasticsearch.bean.House" >
+    update house
+    <set >
+      <if test="title != null" >
+        title = #{title,jdbcType=VARCHAR},
+      </if>
+      <if test="price != null" >
+        price = #{price,jdbcType=INTEGER},
+      </if>
+      <if test="area != null" >
+        area = #{area,jdbcType=INTEGER},
+      </if>
+      <if test="room != null" >
+        room = #{room,jdbcType=INTEGER},
+      </if>
+      <if test="floor != null" >
+        floor = #{floor,jdbcType=INTEGER},
+      </if>
+      <if test="totalFloor != null" >
+        total_floor = #{totalFloor,jdbcType=INTEGER},
+      </if>
+      <if test="watchTimes != null" >
+        watch_times = #{watchTimes,jdbcType=INTEGER},
+      </if>
+      <if test="buildYear != null" >
+        build_year = #{buildYear,jdbcType=INTEGER},
+      </if>
+      <if test="status != null" >
+        status = #{status,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="lastUpdateTime != null" >
+        last_update_time = #{lastUpdateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="cityEnName != null" >
+        city_en_name = #{cityEnName,jdbcType=VARCHAR},
+      </if>
+      <if test="regionEnName != null" >
+        region_en_name = #{regionEnName,jdbcType=VARCHAR},
+      </if>
+      <if test="cover != null" >
+        cover = #{cover,jdbcType=VARCHAR},
+      </if>
+      <if test="direction != null" >
+        direction = #{direction,jdbcType=INTEGER},
+      </if>
+      <if test="distanceToSubway != null" >
+        distance_to_subway = #{distanceToSubway,jdbcType=INTEGER},
+      </if>
+      <if test="parlour != null" >
+        parlour = #{parlour,jdbcType=INTEGER},
+      </if>
+      <if test="district != null" >
+        district = #{district,jdbcType=VARCHAR},
+      </if>
+      <if test="adminId != null" >
+        admin_id = #{adminId,jdbcType=INTEGER},
+      </if>
+      <if test="bathroom != null" >
+        bathroom = #{bathroom,jdbcType=INTEGER},
+      </if>
+      <if test="street != null" >
+        street = #{street,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.elasticsearch.cn.elasticsearch.bean.House" >
+    update house
+    set title = #{title,jdbcType=VARCHAR},
+      price = #{price,jdbcType=INTEGER},
+      area = #{area,jdbcType=INTEGER},
+      room = #{room,jdbcType=INTEGER},
+      floor = #{floor,jdbcType=INTEGER},
+      total_floor = #{totalFloor,jdbcType=INTEGER},
+      watch_times = #{watchTimes,jdbcType=INTEGER},
+      build_year = #{buildYear,jdbcType=INTEGER},
+      status = #{status,jdbcType=INTEGER},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      last_update_time = #{lastUpdateTime,jdbcType=TIMESTAMP},
+      city_en_name = #{cityEnName,jdbcType=VARCHAR},
+      region_en_name = #{regionEnName,jdbcType=VARCHAR},
+      cover = #{cover,jdbcType=VARCHAR},
+      direction = #{direction,jdbcType=INTEGER},
+      distance_to_subway = #{distanceToSubway,jdbcType=INTEGER},
+      parlour = #{parlour,jdbcType=INTEGER},
+      district = #{district,jdbcType=VARCHAR},
+      admin_id = #{adminId,jdbcType=INTEGER},
+      bathroom = #{bathroom,jdbcType=INTEGER},
+      street = #{street,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>
