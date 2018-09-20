@@ -30,7 +30,7 @@ public class IndexController {
         Map<String,Object> map = new HashMap<>();
         map.put("name",name);
         List<User> users = userService.getUsers(map);
-        return ResultUtil.success("0","success",users);
+        return CommonResult.success(0,"success",users);
     }
 
     @RequestMapping("/index")

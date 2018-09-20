@@ -1,6 +1,9 @@
 server:
   tomcat:
     uri-encoding: UTF-8
+  error:
+    whitelabel:
+      enabled: false
 
 #此配置已过时
 security:
@@ -61,9 +64,13 @@ spring:
       max-idle: 100
       max-wait: 5000
       timeout: 5000
+  devtools:
+    restart:
+      exclude: templates/**,static/**
+
+
 logging:
   level:
     com.elasticsearch.cn.elasticsearch.dao: info
-
 
 
