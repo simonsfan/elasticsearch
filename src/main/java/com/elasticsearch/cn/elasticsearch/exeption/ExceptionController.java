@@ -1,21 +1,14 @@
-/*
 package com.elasticsearch.cn.elasticsearch.exeption;
 
-import java.util.Map;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.web.servlet.error.ErrorAttributes;
+import org.springframework.boot.web.servlet.error.ErrorController;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
-import com.elasticsearch.cn.elasticsearch.result.CommonResult;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.web.ErrorAttributes;
-import org.springframework.boot.autoconfigure.web.ErrorController;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.context.request.RequestAttributes;
-import org.springframework.web.context.request.ServletRequestAttributes;
-
 
 @Controller
 public class ExceptionController implements ErrorController {
@@ -48,11 +41,7 @@ public class ExceptionController implements ErrorController {
         return "index";
     }
 
-    */
-/**
-     * 处理json之类的异常
-     *//*
-
+     /*//处理json之类的异常
     @RequestMapping(value = ERROR_PAGE_PATH)
     @ResponseBody
     public CommonResult errorHandler(HttpServletRequest request) {
@@ -70,7 +59,6 @@ public class ExceptionController implements ErrorController {
             return status;
         }
         return 500;
-    }
+    }*/
 
 }
-*/
