@@ -174,4 +174,14 @@
       house_id = #{houseId,jdbcType=INTEGER}
     where id = #{id,jdbcType=INTEGER}
   </update>
+
+  <select id="getHouseDetailByHouseId" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select <include refid="Base_Column_List"/> from house_detail
+    <where>
+      <if test="houseId != null">
+        house_id = #{houseId}
+      </if>
+    </where>
+  </select>
+
 </mapper>

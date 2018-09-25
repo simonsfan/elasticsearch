@@ -114,4 +114,35 @@
       baidu_map_lat = #{baiduMapLat,jdbcType=DOUBLE}
     where id = #{id,jdbcType=INTEGER}
   </update>
+
+  <select id="findByEnName" parameterType="java.util.Map" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List"/>
+    from support_address
+    <where>
+      <if test="enName != null">
+        en_name = #{enName}
+      </if>
+      <if test="level != null">
+        and level = #{level}
+      </if>
+    </where>
+  </select>
+
+  <select id="findAllByLevelAndBelongTo" parameterType="java.util.Map" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List"/>
+    from support_address
+    <where>
+      <if test="enName != null">
+        belong_to = #{enName}
+      </if>
+      <if test="level != null">
+        and level = #{level}
+      </if>
+    </where>
+  </select>
+
+
+
 </mapper>

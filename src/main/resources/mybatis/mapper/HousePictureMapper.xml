@@ -114,4 +114,15 @@
       path = #{path,jdbcType=VARCHAR}
     where id = #{id,jdbcType=INTEGER}
   </update>
+
+  <select id="getHousePictureByHouseId" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select <include refid="Base_Column_List"/> from house_picture
+    <where>
+      <if test="houseId != null">
+        house_id = #{houseId}
+      </if>
+    </where>
+
+  </select>
+
 </mapper>

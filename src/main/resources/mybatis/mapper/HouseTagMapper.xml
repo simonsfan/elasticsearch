@@ -68,4 +68,15 @@
       name = #{name,jdbcType=VARCHAR}
     where id = #{id,jdbcType=INTEGER}
   </update>
+
+  <select id="getHouseTagByHouseId" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select <include refid="Base_Column_List"/> from house_tag
+    <where>
+      <if test="houseId != null">
+        house_id = #{houseId}
+      </if>
+    </where>
+  </select>
+
+
 </mapper>

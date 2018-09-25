@@ -33,9 +33,9 @@ public class IndexController {
         return CommonResult.success(0,"success",users);
     }
 
-    @RequestMapping("/index")
+/*    @RequestMapping("/index")
     public String index(){
         return "index";
-    }
+    }*/
 
 }

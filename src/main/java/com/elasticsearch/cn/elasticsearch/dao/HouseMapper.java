@@ -1,6 +1,9 @@
 package com.elasticsearch.cn.elasticsearch.dao;
 
 import com.elasticsearch.cn.elasticsearch.bean.House;
+import com.elasticsearch.cn.elasticsearch.form.RentSearch;
+
+import java.util.List;
 
 public interface HouseMapper {
     int deleteByPrimaryKey(Integer id);
@@ -14,4 +17,6 @@ public interface HouseMapper {
     int updateByPrimaryKeySelective(House record);
 
     int updateByPrimaryKey(House record);
+
+    List<House> query(RentSearch rentSearch);
 }
