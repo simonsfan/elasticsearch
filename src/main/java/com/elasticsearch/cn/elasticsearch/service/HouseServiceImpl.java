@@ -25,4 +25,9 @@ public class HouseServiceImpl implements HouseService {
     public List<House> query(RentSearch rentSearch) {
         return houseMapper.query(rentSearch);
     }
+
+    @Override
+    public House getHouseByHouseId(Long houseId) {
+        return houseMapper.selectByPrimaryKey(houseId.intValue());
+    }
 }

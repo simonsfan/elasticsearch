@@ -14,5 +14,7 @@ import java.util.List;
  */
 public interface HouseService {
 
-    public List<House> query(RentSearch rentSearch);
+    List<House> query(RentSearch rentSearch);
+
+    House getHouseByHouseId(Long houseId);
 }
