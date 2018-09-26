@@ -16,6 +16,7 @@ import java.net.UnknownHostException;
  */
 @Configuration
 public class ElasticSearchConfig {
+
     @Value("${elasticsearch.host}")
     private String esHost;
 
@@ -29,18 +30,9 @@ public class ElasticSearchConfig {
     public TransportClient esClient() throws UnknownHostException {
         TransportClient client = null;
         try {
-
-            System.out.println("host==========="+esHost+",port="+esPort);
-            System.out.println("host==========="+esHost+",port="+esPort);
-            System.out.println("host==========="+esHost+",port="+esPort);
-            System.out.println("host==========="+esHost+",port="+esPort);
-            System.out.println("host==========="+esHost+",port="+esPort);
-            System.out.println("host==========="+esHost+",port="+esPort);
-
             Settings settings = Settings.builder()
                     .put("client.transport.sniff", true)
                     .put("cluster.name", this.esName)
-                    .put("thread_pool.search.size", 10)
                     .build();
 
             InetSocketTransportAddress master = new InetSocketTransportAddress(InetAddress.getByName(esHost), esPort);
