@@ -67,11 +67,18 @@ spring:
   devtools:
     restart:
       exclude: templates/**,static/**
+  kafka:
+    bootstrap-servers: movie.vip.huishiguang.com:9092
+    consumer:
+      group-id: xunwu
+      auto-offset-reset: earliest
 
 
 logging:
   level:
-    com.elasticsearch.cn.elasticsearch.dao: info
+#    root: debug
+    com.elasticsearch.cn.elasticsearch.dao: debug
+
 
 elasticsearch:
   cluster:

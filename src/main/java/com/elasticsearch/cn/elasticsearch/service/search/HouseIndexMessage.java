@@ -1,8 +1,5 @@
 package com.elasticsearch.cn.elasticsearch.service.search;
 
-/**
- * Created by 瓦力.
- */
 public class HouseIndexMessage {
 
     public static final String INDEX = "index";

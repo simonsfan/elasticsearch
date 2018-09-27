@@ -7,14 +7,13 @@ import com.elasticsearch.cn.elasticsearch.dto.HouseDetailDTO;
 import com.elasticsearch.cn.elasticsearch.dto.HousePictureDTO;
 import com.elasticsearch.cn.elasticsearch.form.RentSearch;
 import com.elasticsearch.cn.elasticsearch.service.*;
+import com.elasticsearch.cn.elasticsearch.service.search.SearchService;
 import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpSession;
@@ -40,6 +39,9 @@ public class HouseController {
 
     @Autowired
     private HouseDetailService houseDetailService;
+
+    @Autowired
+    private SearchService searchService;
 
     @GetMapping(value = {"/", "/index"})
     public String index(Model model) {
@@ -73,8 +75,8 @@ public class HouseController {
 
         //根据城市名获取当前城市信息
         String enName = rentSearch.getCityEnName();
-        Map<String,Object> map = new HashMap<>();
-        map.put("enName",enName);
+        Map<String, Object> map = new HashMap<>();
+        map.put("enName", enName);
         map.put("level", SupportAddress.Level.CITY.getValue());
         List<SupportAddress> addresseList = supportAddressService.getSupportAddressByName(map);
         if (CollectionUtils.isEmpty(addresseList)) {
@@ -84,8 +86,8 @@ public class HouseController {
         model.addAttribute("currentCity", addresseList.get(0));
 
         //根据城市名获取所有的区域信息
-        Map<String,Object> map1 = new HashMap<>();
-        map1.put("enName",enName);
+        Map<String, Object> map1 = new HashMap<>();
+        map1.put("enName", enName);
         map1.put("level", SupportAddress.Level.REGION.getValue());
         List<SupportAddress> allRegionsList = supportAddressService.findAllByLevelAndBelongTo(map1);
         if (CollectionUtils.isEmpty(allRegionsList)) {
@@ -98,7 +100,7 @@ public class HouseController {
         List<House> houseList = houseService.query(rentSearch);
         for (House house : houseList) {
             HouseDTO houseDTO = new HouseDTO();
-            BeanUtils.copyProperties(house,houseDTO);
+            BeanUtils.copyProperties(house, houseDTO);
             houseDTO.setId(Long.valueOf(house.getId()));
             //设置房源标签
             List<HouseTag> houseTags = houseTagService.getHouseTagByHouseId(String.valueOf(house.getId()));
@@ -126,7 +128,7 @@ public class HouseController {
             //设置房源detail信息
             List<HouseDetail> houseDetailList = houseDetailService.getHouseDetailByHouseId(String.valueOf(house.getId()));
             HouseDetailDTO houseDetailDTO = new HouseDetailDTO();
-            BeanUtils.copyProperties(houseDetailList.get(0),houseDetailDTO);
+            BeanUtils.copyProperties(houseDetailList.get(0), houseDetailDTO);
             houseDTO.setHouseDetail(houseDetailDTO);
 
             houseDTOList.add(houseDTO);
@@ -153,6 +155,7 @@ public class HouseController {
 
     /**
      * 房详细页面
+     *
      * @param houseId
      * @param model
      * @return
@@ -163,31 +166,16 @@ public class HouseController {
         if (houseId <= 0) {
             return "404";
         }
-
-        /*ServiceResult<HouseDTO> serviceResult = houseService.findCompleteOne(houseId);
-        if (!serviceResult.isSuccess()) {
-            return "404";
-        }
-
-        HouseDTO houseDTO = serviceResult.getResult();
-        Map<SupportAddress.Level, SupportAddressDTO> addressMap = addressService.findCityAndRegion(houseDTO.getCityEnName(), houseDTO.getRegionEnName());
-
-        SupportAddressDTO city = addressMap.get(SupportAddress.Level.CITY);
-        SupportAddressDTO region = addressMap.get(SupportAddress.Level.REGION);
-
-        model.addAttribute("city", city);
-        model.addAttribute("region", region);
-
-        ServiceResult<UserDTO> userDTOServiceResult = userService.findById(houseDTO.getAdminId());
-        model.addAttribute("agent", userDTOServiceResult.getResult());
-        model.addAttribute("house", houseDTO);
-
-        ServiceResult<Long> aggResult = searchService.aggregateDistrictHouse(city.getEnName(), region.getEnName(), houseDTO.getDistrict());
-        model.addAttribute("houseCountInDistrict", aggResult.getResult());*/
-
         return "house-detail";
     }
 
+    @ResponseBody
+    @RequestMapping(value = "/test")
+    public String test() {
+        long houseId = 15l;
+        searchService.remove(houseId);
+        return "success";
+    }
 
 
 }
