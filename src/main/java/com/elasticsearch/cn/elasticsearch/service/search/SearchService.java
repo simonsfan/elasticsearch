@@ -1,5 +1,10 @@
 package com.elasticsearch.cn.elasticsearch.service.search;
 
+import com.elasticsearch.cn.elasticsearch.form.RentSearch;
+import com.elasticsearch.cn.elasticsearch.result.CommonResult;
+
+import java.util.List;
+
 /**
  * 检索接口
  */
@@ -15,4 +20,8 @@ public interface SearchService {
      * @param houseId
      */
     void remove(Long houseId);
+
+    List<Long> queryByEs(RentSearch rentSearch);
+
+    CommonResult<List<String>> suggest(String prefix);
 }

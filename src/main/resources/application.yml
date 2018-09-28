@@ -76,12 +76,12 @@ spring:
 
 logging:
   level:
-#    root: debug
-    com.elasticsearch.cn.elasticsearch.dao: debug
+    com.elasticsearch.cn.elasticsearch.dao: info
+    #root: debug
 
 
 elasticsearch:
   cluster:
-    name: my_cluster
+    name: elasticsearch
   host: 127.0.0.1
   port: 9300

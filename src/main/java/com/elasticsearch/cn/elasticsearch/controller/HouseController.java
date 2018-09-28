@@ -6,6 +6,7 @@ import com.elasticsearch.cn.elasticsearch.dto.HouseDTO;
 import com.elasticsearch.cn.elasticsearch.dto.HouseDetailDTO;
 import com.elasticsearch.cn.elasticsearch.dto.HousePictureDTO;
 import com.elasticsearch.cn.elasticsearch.form.RentSearch;
+import com.elasticsearch.cn.elasticsearch.result.CommonResult;
 import com.elasticsearch.cn.elasticsearch.service.*;
 import com.elasticsearch.cn.elasticsearch.service.search.SearchService;
 import org.apache.commons.collections.CollectionUtils;
@@ -97,44 +98,48 @@ public class HouseController {
 
         List<HouseDTO> houseDTOList = new ArrayList<>();
 
+        // 关键的一步：
+        //  1、如果用户有输入关键词，则用es快速搜索出关联的houseids，然后根据这些houseIds查询具体的信息  2、如果没有输入，则默认直接使用mysql查询
+        // 注意: es中查询出来的顺序和经过mysql查询详细信息后的顺序要严格一致
         List<House> houseList = houseService.query(rentSearch);
-        for (House house : houseList) {
-            HouseDTO houseDTO = new HouseDTO();
-            BeanUtils.copyProperties(house, houseDTO);
-            houseDTO.setId(Long.valueOf(house.getId()));
-            //设置房源标签
-            List<HouseTag> houseTags = houseTagService.getHouseTagByHouseId(String.valueOf(house.getId()));
-            List<String> houseTagList = new ArrayList<>();
-            for (HouseTag houseTag : houseTags) {
-                houseTagList.add(houseTag.getName());
+        if (!CollectionUtils.isEmpty(houseList)) {
+            for (House house : houseList) {
+                HouseDTO houseDTO = new HouseDTO();
+                BeanUtils.copyProperties(house, houseDTO);
+                houseDTO.setId(Long.valueOf(house.getId()));
+                //设置房源标签
+                List<HouseTag> houseTags = houseTagService.getHouseTagByHouseId(String.valueOf(house.getId()));
+                List<String> houseTagList = new ArrayList<>();
+                for (HouseTag houseTag : houseTags) {
+                    houseTagList.add(houseTag.getName());
+                }
+                houseDTO.setTags(houseTagList);
+
+                //设置房源照片
+                List<HousePicture> housePictureList = housePictureService.getHousePictureByHouseId(String.valueOf(house.getId()));
+                List<HousePictureDTO> pictures = new ArrayList<>();
+                HousePictureDTO pictureDTO = new HousePictureDTO();
+                for (HousePicture housePicture : housePictureList) {
+                    pictureDTO.setCdnPrefix(housePicture.getCdnPrefix());
+                    pictureDTO.setHeight(housePicture.getHeight());
+                    pictureDTO.setWidth(housePicture.getWidth());
+                    pictureDTO.setHouseId(Long.valueOf(housePicture.getHouseId()));
+                    pictureDTO.setPath(housePicture.getPath());
+                    pictureDTO.setId(Long.valueOf(housePicture.getId()));
+                    pictures.add(pictureDTO);
+                }
+                houseDTO.setPictures(pictures);
+
+                //设置房源detail信息
+                List<HouseDetail> houseDetailList = houseDetailService.getHouseDetailByHouseId(String.valueOf(house.getId()));
+                HouseDetailDTO houseDetailDTO = new HouseDetailDTO();
+                BeanUtils.copyProperties(houseDetailList.get(0), houseDetailDTO);
+                houseDTO.setHouseDetail(houseDetailDTO);
+
+                houseDTOList.add(houseDTO);
             }
-            houseDTO.setTags(houseTagList);
-
-            //设置房源照片
-            List<HousePicture> housePictureList = housePictureService.getHousePictureByHouseId(String.valueOf(house.getId()));
-            List<HousePictureDTO> pictures = new ArrayList<>();
-            HousePictureDTO pictureDTO = new HousePictureDTO();
-            for (HousePicture housePicture : housePictureList) {
-                pictureDTO.setCdnPrefix(housePicture.getCdnPrefix());
-                pictureDTO.setHeight(housePicture.getHeight());
-                pictureDTO.setWidth(housePicture.getWidth());
-                pictureDTO.setHouseId(Long.valueOf(housePicture.getHouseId()));
-                pictureDTO.setPath(housePicture.getPath());
-                pictureDTO.setId(Long.valueOf(housePicture.getId()));
-                pictures.add(pictureDTO);
-            }
-            houseDTO.setPictures(pictures);
-
-            //设置房源detail信息
-            List<HouseDetail> houseDetailList = houseDetailService.getHouseDetailByHouseId(String.valueOf(house.getId()));
-            HouseDetailDTO houseDetailDTO = new HouseDetailDTO();
-            BeanUtils.copyProperties(houseDetailList.get(0), houseDetailDTO);
-            houseDTO.setHouseDetail(houseDetailDTO);
-
-            houseDTOList.add(houseDTO);
         }
-
-        model.addAttribute("total", houseList.size());
+        model.addAttribute("total", houseDTOList.size());
         model.addAttribute("houses", houseDTOList);
 
         if (rentSearch.getRegionEnName() == null) {
@@ -151,6 +156,19 @@ public class HouseController {
         model.addAttribute("currentAreaBlock", RentValueBlock.matchArea(rentSearch.getAreaBlock()));
 
         return "rent-list";
+    }
+
+    /**
+     * 自动补全接口
+     */
+    @GetMapping("rent/house/autocomplete")
+    @ResponseBody
+    public CommonResult autocomplete(@RequestParam(value = "prefix") String prefix) {
+
+        if (prefix.isEmpty()) {
+            return CommonResult.success(-1,"bad request",null);
+        }
+        return this.searchService.suggest(prefix);
     }
 
     /**

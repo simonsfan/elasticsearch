@@ -12,10 +12,16 @@ public class SearchSearchTest extends ElasticsearchApplicationTests {
 
     @Test
     public void testSearch() throws InterruptedException {
+
+
+        for (long i = 15; i < 26; i++) {
+            searchService.index(i);
+            Thread.sleep(3000);
+        }
+
+
 /*        long houseId = 15l;
-        searchService.index(houseId);*/
-        long houseId = 15l;
-        searchService.remove(houseId);
+        searchService.remove(houseId);*/
     }
 
 }
