@@ -30,6 +30,8 @@ import org.elasticsearch.index.reindex.DeleteByQueryAction;
 import org.elasticsearch.index.reindex.DeleteByQueryRequestBuilder;
 import org.elasticsearch.rest.RestStatus;
 import org.elasticsearch.search.SearchHit;
+import org.elasticsearch.search.aggregations.AggregationBuilders;
+import org.elasticsearch.search.aggregations.bucket.terms.Terms;
 import org.elasticsearch.search.sort.SortOrder;
 import org.elasticsearch.search.suggest.Suggest;
 import org.elasticsearch.search.suggest.SuggestBuilder;
@@ -42,9 +44,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.kafka.core.KafkaTemplate;
-import org.springframework.kafka.support.SendResult;
 import org.springframework.stereotype.Service;
-import org.springframework.util.concurrent.ListenableFuture;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -130,6 +130,12 @@ public class SearchServiceImpl implements SearchService {
         }
     }
 
+    /**
+     * 搜索框自动补全接口查询
+     *
+     * @param prefix
+     * @return
+     */
     @Override
     public CommonResult<List<String>> suggest(String prefix) {
         CompletionSuggestionBuilder suggestion = SuggestBuilders.completionSuggestion("suggest").prefix(prefix).size(5);
@@ -178,6 +184,43 @@ public class SearchServiceImpl implements SearchService {
         return CommonResult.success(200, "success", suggests);
     }
 
+    /**
+     * 房源统计：该小区出售中的房源总共~套
+     *
+     * @param cityName
+     * @param regionName
+     * @param district
+     * @return
+     */
+    @Override
+    public Long aggregateDistrictHouse(String cityName, String regionName, String district) {
+
+        BoolQueryBuilder boolQueryBuilder = QueryBuilders.boolQuery()
+                .filter(QueryBuilders.termQuery(HouseIndexKey.CITY_EN_NAME, cityName))
+                .filter(QueryBuilders.termQuery(HouseIndexKey.REGION_EN_NAME, regionName))
+                .filter(QueryBuilders.termQuery(HouseIndexKey.DISTRICT, district));
+
+        SearchRequestBuilder searchRequestBuilder = this.esClient.prepareSearch(INDEX_NAME, INDEX_TYPE)
+                .setQuery(boolQueryBuilder)
+                .addAggregation(
+                        AggregationBuilders.terms(HouseIndexKey.AGG_DISTRICT).field(HouseIndexKey.DISTRICT)
+                ).setSize(0);
+
+        SearchResponse searchResponse = searchRequestBuilder.get();
+        if (searchResponse.status() == RestStatus.OK) {
+            Terms terms = searchResponse.getAggregations().get(HouseIndexKey.AGG_DISTRICT);
+            if (terms.getBuckets() != null && !terms.getBuckets().isEmpty()) {
+                return terms.getBucketByKey(district).getDocCount();
+            }
+        }
+        return null;
+    }
+
+    /**
+     * 新增或更新suggest字段
+     * @param indexTemplate
+     * @return
+     */
     private boolean updateSuggest(HouseIndexTemplate indexTemplate) {
         AnalyzeRequestBuilder requestBuilder = new AnalyzeRequestBuilder(
                 this.esClient, AnalyzeAction.INSTANCE, INDEX_NAME, indexTemplate.getTitle(),
@@ -243,10 +286,11 @@ public class SearchServiceImpl implements SearchService {
         for (HouseTag houseTag : houseTagList) {
             tagList.add(houseTag.getName());
         }
-        indexTemplate.setTags(tagList);
+        modelMapper.map(tagList, indexTemplate);
 
         //根据house_id查询索引中的数据
         SearchRequestBuilder searchRequestBuilder = this.esClient.prepareSearch(INDEX_NAME).setTypes(INDEX_TYPE).setQuery(QueryBuilders.termQuery(HouseIndexKey.HOUSE_ID, houseId));
+
 
         SearchResponse searchResponse = searchRequestBuilder.get();
 
@@ -286,9 +330,7 @@ public class SearchServiceImpl implements SearchService {
         }
         HouseIndexMessage message = new HouseIndexMessage(houseId, HouseIndexMessage.REMOVE, retry);
         try {
-            ListenableFuture<SendResult<String, String>> send = kafkaTemplate.send(INDEX_TOPIC, objectMapper.writeValueAsString(message));
-            boolean done = send.isDone();
-            System.out.println("kafka send result=" + done);
+            kafkaTemplate.send(INDEX_TOPIC, objectMapper.writeValueAsString(message));
         } catch (JsonProcessingException e) {
             logger.error("Json encode error for " + message);
         }
@@ -391,12 +433,11 @@ public class SearchServiceImpl implements SearchService {
         for (SearchHit searchHit : searchResponse.getHits()) {
             houseIdList.add(Long.parseLong(String.valueOf(searchHit.getSource().get(HouseIndexKey.HOUSE_ID))));
         }
-
         return houseIdList;
     }
 
 
-    /*新增*/
+    /*新增preIndex*/
     private boolean create(HouseIndexTemplate indexTemplate) {
         if (!updateSuggest(indexTemplate)) {
             return false;
@@ -414,7 +455,7 @@ public class SearchServiceImpl implements SearchService {
         }
     }
 
-    /*更新索引*/
+    /*更新索引preUpdate*/
     private boolean update(String esId, HouseIndexTemplate indexTemplate) {
         if (!updateSuggest(indexTemplate)) {
             return false;

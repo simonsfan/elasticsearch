@@ -1,6 +1,7 @@
 package com.elasticsearch.cn.elasticsearch.service;
 
 import com.elasticsearch.cn.elasticsearch.bean.House;
+import com.elasticsearch.cn.elasticsearch.dto.HouseDTO;
 import com.elasticsearch.cn.elasticsearch.form.RentSearch;
 
 import java.util.List;
@@ -17,4 +18,6 @@ public interface HouseService {
     List<House> query(RentSearch rentSearch);
 
     House getHouseByHouseId(Long houseId);
+
+    HouseDTO findHouseOne(Long houseId);
 }

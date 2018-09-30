@@ -159,7 +159,7 @@ public class HouseController {
     }
 
     /**
-     * 自动补全接口
+     * 搜索框自动补全接口
      */
     @GetMapping("rent/house/autocomplete")
     @ResponseBody
@@ -172,7 +172,7 @@ public class HouseController {
     }
 
     /**
-     * 房详细页面
+     * 房详细页面：里面用到了聚合查询
      *
      * @param houseId
      * @param model
@@ -184,16 +184,39 @@ public class HouseController {
         if (houseId <= 0) {
             return "404";
         }
+    /*    HouseDTO houseDTO = houseService.findHouseOne(houseId);
+        if (houseDTO == null) {
+            return "404";
+        }
+
+        String enName = houseDTO.getCityEnName();
+        Map<String, Object> map = new HashMap<>();
+        map.put("enName", enName);
+        map.put("level", SupportAddress.Level.CITY.getValue());
+        List<SupportAddress> addresseList = supportAddressService.getSupportAddressByName(map);
+        if (CollectionUtils.isEmpty(addresseList)) {
+            return "redirect:/index";
+        }
+
+        Map<SupportAddress.Level, SupportAddressDTO> addressMap = houseService.findCityAndRegion(houseDTO.getCityEnName(), houseDTO.getRegionEnName());
+
+        SupportAddressDTO city = addressMap.get(SupportAddress.Level.CITY);
+        SupportAddressDTO region = addressMap.get(SupportAddress.Level.REGION);
+
+        model.addAttribute("city", city);
+        model.addAttribute("region", region);
+
+        ServiceResult<UserDTO> userDTOServiceResult = userService.findById(houseDTO.getAdminId());
+        model.addAttribute("agent", userDTOServiceResult.getResult());
+        model.addAttribute("house", houseDTO);
+
+        List<Long> aggResult = searchService.aggregateDistrictHouse(city.getEnName(), region.getEnName(), houseDTO.getDistrict());
+        model.addAttribute("houseCountInDistrict", aggResult.size());
+*/
+        Long count = searchService.aggregateDistrictHouse("bj", "zyq", "");
+
+
         return "house-detail";
     }
-
-    @ResponseBody
-    @RequestMapping(value = "/test")
-    public String test() {
-        long houseId = 15l;
-        searchService.remove(houseId);
-        return "success";
-    }
-
 
 }

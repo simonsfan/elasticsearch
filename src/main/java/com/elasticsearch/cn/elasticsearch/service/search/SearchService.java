@@ -24,4 +24,7 @@ public interface SearchService {
     List<Long> queryByEs(RentSearch rentSearch);
 
     CommonResult<List<String>> suggest(String prefix);
+
+    Long aggregateDistrictHouse(String cityName,String regionName,String district);
+
 }
